@@ -195,3 +195,99 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =====================================
+   FXBYHARI — CINEMATIC ANIMATIONS
+===================================== */
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(.2,.7,.2,1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero heading entrance */
+.hero-title-animate {
+  animation: heroEntrance 1.1s cubic-bezier(.2,.7,.2,1) both;
+}
+
+@keyframes heroEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(45px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Desktop custom cursor */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+
+  a,
+  button {
+    cursor: none;
+  }
+
+  .custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    margin: -9px 0 0 -9px;
+    transition:
+      width .25s ease,
+      height .25s ease,
+      background .25s ease;
+  }
+
+  .custom-cursor.cursor-hover {
+    width: 42px;
+    height: 42px;
+    background: rgba(200, 75, 54, .16);
+  }
+}
+
+/* Mobile: no custom cursor */
+@media (max-width: 760px) {
+  .custom-cursor {
+    display: none;
+  }
+
+  body,
+  a,
+  button {
+    cursor: auto;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-title-animate {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    filter: none;
+    transition: none;
+  }
+}
