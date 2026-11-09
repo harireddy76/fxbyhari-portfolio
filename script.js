@@ -1,117 +1,75 @@
 
-// =====================================
-// FXBYHARI — NAVIGATION
-// =====================================
+// ======================================
+// FXBYHARI — WEBSITE INTERACTIONS
+// ======================================
 
-const toggle = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.nav nav');
+// MOBILE NAVIGATION
+const menuToggle = document.querySelector('.menu-toggle');
+const mainNav = document.querySelector('.main-nav');
 
-toggle?.addEventListener('click', () => {
-  if (!nav) return;
+function closeMenu() {
+  if (!menuToggle || !mainNav) return;
 
-  const open = nav.classList.toggle('open');
+  mainNav.classList.remove('open');
+  menuToggle.textContent = '☰';
+  menuToggle.setAttribute('aria-expanded', 'false');
+  menuToggle.setAttribute('aria-label', 'Open navigation');
+}
 
-  toggle.setAttribute('aria-expanded', String(open));
-  toggle.setAttribute(
-    'aria-label',
-    open ? 'Close navigation' : 'Open navigation'
-  );
-  toggle.textContent = open ? '×' : '☰';
-});
+if (menuToggle && mainNav) {
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
 
-nav?.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    nav.classList.remove('open');
+    menuToggle.textContent = isOpen ? '×' : '☰';
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    menuToggle.setAttribute(
+      'aria-label',
+      isOpen ? 'Close navigation' : 'Open navigation'
+    );
+  });
 
-    toggle?.setAttribute('aria-expanded', 'false');
+  // Close menu after clicking a navigation link
+  mainNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
 
-    if (toggle) {
-      toggle.textContent = '☰';
-      toggle.setAttribute('aria-label', 'Open navigation');
+  // Close menu when pressing Escape
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      closeMenu();
+    }
+  });
+
+  // Close menu when returning to desktop layout
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 700) {
+      closeMenu();
+    }
+  });
+}
+
+// AUTOMATIC COPYRIGHT YEAR
+const yearElement = document.querySelector('#year');
+
+if (yearElement) {
+  yearElement.textContent = new Date().getFullYear();
+}
+
+// SMOOTH SCROLL FOR INTERNAL LINKS
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const targetId = link.getAttribute('href');
+    const target = document.querySelector(targetId);
+
+    if (target) {
+      event.preventDefault();
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
   });
 });
 
-// =====================================
-// AUTOMATIC COPYRIGHT YEAR
-// =====================================
-
-const year = document.querySelector('#year');
-
-if (year) {
-  year.textContent = new Date().getFullYear();
-}
-
-// =====================================
-// CINEMATIC SCROLL REVEALS
-// =====================================
-
-const revealElements = document.querySelectorAll(
-  '.section-head, .project-image, .project-info, .about-copy, .contact'
-);
-
-if ('IntersectionObserver' in window) {
-  const revealObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.12
-  });
-
-  revealElements.forEach(element => {
-    element.classList.add('reveal');
-    revealObserver.observe(element);
-  });
-} else {
-  revealElements.forEach(element => {
-    element.classList.add('is-visible');
-  });
-}
-
-// =====================================
-// HERO HEADING ANIMATION
-// =====================================
-
-const heroTitle = document.querySelector('.hero h1');
-
-if (heroTitle) {
-  heroTitle.classList.add('hero-title-animate');
-}
-
-// =====================================
-// DESKTOP CUSTOM CURSOR
-// =====================================
-
-const desktopPointer = window.matchMedia(
-  '(hover: hover) and (pointer: fine)'
-);
-
-const reducedMotion = window.matchMedia(
-  '(prefers-reduced-motion: reduce)'
-);
-
-if (desktopPointer.matches && !reducedMotion.matches) {
-  const cursor = document.createElement('div');
-
-  cursor.className = 'custom-cursor';
-  document.body.appendChild(cursor);
-
-  document.addEventListener('mousemove', event => {
-    cursor.style.transform =
-      `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-  });
-
-  document.querySelectorAll('a, button, .project-image').forEach(item => {
-    item.addEventListener('mouseenter', () => {
-      cursor.classList.add('cursor-hover');
-    });
-
-    item.addEventListener('mouseleave', () => {
-      cursor.classList.remove('cursor-hover');
-    });
-  });
-}
+// FXBYHARI WEBSITE READY
+console.log('FXBYHARI website loaded successfully.');
